@@ -1,0 +1,87 @@
+﻿@using System.Globalization;
+
+@using JWST_ClassLib ;
+
+@typeparam T where T : ICalendarItem
+
+<PageTitle>@(CalendarName ?? "Calendar Name Here")</PageTitle>
+    <MudStack Justify="Justify.Center">
+        <MudPaper Style="background-color:transparent">
+            <MudText GutterBottom=true Style="font-size: xx-large; color:white" Align="Align.Center">@(CalendarName ?? "Calendar Name Here")</MudText>
+        </MudPaper>
+
+        <CalendarPicker selectedDate="selectedDate" OnDateChange="HandleDateChange">
+
+        </CalendarPicker>
+
+        <MudPaper Class="margins" Style="margin-bottom:150px;">
+            @if (selectedItems != null && selectedItems.Any())
+        {
+
+            <MudSimpleTable  Hover=true Outlined=true Bordered=true FixedHeader=true Style="height:400px;" Items="selectedItems">
+                <thead>
+                    <MudTHeadRow IsCheckable="true">
+                        @foreach(var prop in typeof(T).GetProperties())
+                        {
+                        <MudTh><strong>@prop.Name</strong></MudTh>
+                        }
+                    </MudTHeadRow>
+                </thead>
+                <tbody>
+                    @foreach (var item in selectedItems)
+                    {
+                        <MudTr>
+                            @foreach(var prop in typeof(T).GetProperties())
+                            {
+                                <MudTd>@prop.GetValue(item)?.ToString()</MudTd>
+                            }
+                        </MudTr>
+                    }
+                </tbody>
+        </MudSimpleTable>
+        }
+        else
+        {
+            <MudCard>
+                <MudText>No Entries for this date yet</MudText>
+            </MudCard>
+        }
+    </MudPaper>
+</MudStack>
+<style type="text/css">
+    .mud-table-head .header-centered th thead {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+   .mud-table-foot .bold-text .mud-table-cell {
+       font-weight: 500;
+   }
+</style>
+@code {
+    public DateTime? selectedDate;
+    [Parameter]
+    public List<T> Items { get; set; }
+    public List<T> selectedItems { get; set; } // To store the filtered observations
+    [Parameter]
+    public string? CalendarName { get; set; }
+    
+
+    string _dragIndicatorIcon = Icons.Material.Filled.DragIndicator;
+
+    void HandleDateChange(DateTime? date)
+    {
+        if (date.HasValue)
+        {
+            DateTime parsedDate;
+            selectedItems = Items
+                .Where(o => DateTime.TryParse(o.ScheduledStartTime, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out parsedDate)
+                             && parsedDate.Date == date.Value.Date)
+                .ToList();
+
+            selectedDate = date;
+        }
+
+    }
+
+}

@@ -1,0 +1,18 @@
+﻿@page "/"
+@inject DatabaseManager DbManager
+
+
+<Calendar T="JWST_ClassLib.Observation" Items="Observations" CalendarName="James Webb Observation Schedule" />
+@code {
+    private List<JWST_ClassLib.Observation> Observations { get; set; } = new List<JWST_ClassLib.Observation>();
+
+    protected override void OnInitialized()
+    {
+        var result = DbManager.GetAllObservations();
+        if (result != null)
+        {
+            Observations = result;
+        }
+    }
+}
+

@@ -1,0 +1,57 @@
+﻿@using System.Globalization;
+@using JWST_ClassLib;
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xxl="5" xl="5" lg="5">
+        <MudPaper>
+
+        </MudPaper>
+    </MudItem>
+    <MudItem xxl="2" xl="2" lg="2">
+        <MudPaper>
+            <MudDatePicker Orientation="Orientation.Portrait"
+                        Editable=true
+                        @ref="_picker"
+                        Date="selectedDate"
+                        Rounded=true
+                        PickerVariant="PickerVariant.Static"
+                        DateChanged="OnDateChange">
+                <PickerActions>
+                    <MudButton Class="mr-auto align-self-start" OnClick="Today">Today</MudButton>
+                </PickerActions>
+            </MudDatePicker>
+        </MudPaper>
+    </MudItem>
+    <MudItem xxl="5" xl="5" lg="5">
+        <MudPaper>
+
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+
+    @code {
+    [Parameter]
+    public EventCallback<DateTime?> OnDateChange { get; set; }
+
+    [Parameter]
+    public DateTime? selectedDate { get; set; }
+
+    
+    public MudDatePicker _picker = new MudDatePicker();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _picker.GoToDate(DateTime.Today);
+
+        }
+
+    }
+
+    private async Task Today()
+    {
+        await _picker.GoToDate(DateTime.Today);
+    }
+}
