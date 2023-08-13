@@ -21,9 +21,9 @@
             <MudSimpleTable  Hover=true Outlined=true Bordered=true FixedHeader=true Style="height:400px;" Items="selectedItems">
                 <thead>
                     <MudTHeadRow IsCheckable="true">
-                        @foreach(var prop in typeof(T).GetProperties())
+                        @foreach(var prop in typeof(T).GetProperties().Take(typeof(T).GetProperties().Length - 1))
                         {
-                        <MudTh><strong>@prop.Name</strong></MudTh>
+                            <MudTh><strong>@prop.Name</strong></MudTh>
                         }
                     </MudTHeadRow>
                 </thead>
@@ -31,10 +31,10 @@
                     @foreach (var item in selectedItems)
                     {
                         <MudTr>
-                            @foreach(var prop in typeof(T).GetProperties())
-                            {
+                            @foreach(var prop in typeof(T).GetProperties().Take(typeof(T).GetProperties().Length - 1))
+                                {
                                 <MudTd>@prop.GetValue(item)?.ToString()</MudTd>
-                            }
+                                }
                         </MudTr>
                     }
                 </tbody>

@@ -7,7 +7,7 @@ html, body {
     padding: 0;
 }
 .backgroundImage {
-    background-image: url('/images/4k_deepfield.png');
+    background-image: url('/images/4k_deepfield.webp');
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 100%;
